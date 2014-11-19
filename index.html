@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title> </title>
+
+        <meta name="description" content=" "/>
+        <link rel="image_src" href="img/ .png" />
+
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">   
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+
+
+        <style>
+
+            #query {
+                width: 300px;
+                height: 30px;
+                border: 1px solid gray;
+                display: block;
+                margin: 0 auto;
+                margin-top: 200px;
+                padding: 5px;
+            }
+
+            #search {
+                display: block;
+                margin: 0 auto;
+                margin-top: 20px;
+            }
+
+
+
+        </style>
+
+    </head>
+
+
+    <body>
+
+
+
+        <form id="search-form">
+            <input type="text" id="query" placeholder="Search An Artist" value="" class="form-control" />
+            <input type="submit" id="search" class="btn btn-primary" value="Search" />
+        </form>
+
+
+        <div class="result"></div>
+
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script type="text/javascript" src="js/script.js"></script>
+        
+
+        <script>
+
+
+
+        initSearch();
+
+
+        function initSearch(){
+
+
+
+            var fetchedArtist,
+            ArtistUniqueId,
+            artistQuery,
+            result = $('.result'),
+            audioObject = null;
+
+
+            document.getElementById('search-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                getArtistId($('#query').val());
+
+             }, false);
+
+
+            var getArtistId = function (query) {
+                $.ajax({
+                    url: 'https://api.spotify.com/v1/search',
+                    data: {
+                        q: query,
+                        type: 'artist'
+                    },
+
+                    success: function (response) {
+                        console.log(response);
+                        artistUniqueId = response.artists.items[0].id;
+                        console.log(artistUniqueId);
+                        getTracks(artistUniqueId);
+                    }
+                });
+            };
+
+
+            var getTracks = function (artistid) {
+                $.ajax({
+                    url: 'https://api.spotify.com/v1/artists/' + artistid + '/top-tracks?country=US',
+                    
+                    success: function (response) {
+                 
+                        var fetchedArtist = response;
+                        console.log(fetchedArtist);
+
+                        var random = Math.floor(Math.random() * 10);
+                        audioObject = new Audio(response.tracks[random].preview_url);
+                        audioObject.play();
+                    }
+                });
+            };
+
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+
+
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+        </script>
+
+
+
+    </body>
+</html>
+
+
+
+
+
