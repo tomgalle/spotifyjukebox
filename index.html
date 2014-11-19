@@ -32,7 +32,6 @@
             }
 
 
-
         </style>
 
     </head>
@@ -48,7 +47,9 @@
         </form>
 
 
-        <div class="result"></div>
+        <div class="player"></div>    
+        <div class="result"></div>    
+
 
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script type="text/javascript" src="js/script.js"></script>
@@ -57,13 +58,9 @@
         <script>
 
 
-
         initSearch();
 
-
         function initSearch(){
-
-
 
             var fetchedArtist,
             ArtistUniqueId,
@@ -77,6 +74,7 @@
                 getArtistId($('#query').val());
 
              }, false);
+
 
 
             var getArtistId = function (query) {
@@ -97,43 +95,68 @@
             };
 
 
+
             var getTracks = function (artistid) {
                 $.ajax({
                     url: 'https://api.spotify.com/v1/artists/' + artistid + '/top-tracks?country=US',
                     
                     success: function (response) {
-                 
-                        var fetchedArtist = response;
-                        console.log(fetchedArtist);
-
+                        
+                        console.log(response);
                         var random = Math.floor(Math.random() * 10);
-                        audioObject = new Audio(response.tracks[random].preview_url);
-                        audioObject.play();
+                        var randSong = response.tracks[random].preview_url;
+                        // console.log(randSong);
+                        playTrack(randSong);
+
+                        var randSongName = response.tracks[random].name;
+                            $('.result').append(randSongName + " " + 'by' + " ");                        
+
+                        var randSongArtists = response.tracks[random].artists;
+
+                        for ( i = 0; i < randSongArtists.length; i++ ){
+                            // console.log(randSongArtists[i].name);
+                         
+                            var lastItem = randSongArtists.length;
+                            console.log(lastItem);
+                            console.log(randSongArtists[i]);
+                            
+                            if ( randSongArtists[i] === lastItem ) {
+                                $('.result').append(randSongArtists[i].name);
+                            }
+
+                            else {
+                                $('.result').append(randSongArtists[i].name + "," + " ");
+                            } 
+                           
+                        }
+
+                        $('.result').css({
+                            'text-align':'center',
+                            'margin-top' : '20px',
+                            'font-size':'20px'
+                        })
+
                     }
                 });
             };
 
 
 
-            
+            var playTrack = function(song) {
 
+                // audioObject = new Audio(song);
+                // audioObject.play();
+                // console.log(audioObject);
 
+                $('.player').append('<audio controls autoplay><source src="' + song + '"type="audio/mpeg" /></audio>')
+                
+                $('audio').css({
+                    'display' : 'block',
+                    'margin' : '0 auto',
+                    'margin-top' : '50px'
+                });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            };
 
 
         }
@@ -141,24 +164,27 @@
 
 
 
-            
-
-
-
-
-
-
-
-
-
-
-
+        
         </script>
 
 
 
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
